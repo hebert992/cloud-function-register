@@ -6,6 +6,7 @@ const {PubSub} = require('@google-cloud/pubsub');
  *
  * @param {!express:Request} req HTTP request context.
  * @param {!express:Response} res HTTP response context.
+ *
  */
 exports.webhook = async (req, res) => {
     const topic = req.query.topic;
