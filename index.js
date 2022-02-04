@@ -12,16 +12,19 @@ exports.webhook = async (req, res) => {
     const topic = req.query.topic;
     const url = req.query.url;
     const token= req.query.token;
+    const body = req.body
     const localToken = "a80a9ec8-cc99-44b8-9fe7-06c29edbfd08"
     if(token != localToken){
         return res.status(401).send("Token invalid")
     }
-    await quickstart(topic,url)
+    console.log(body)
+    await quickstart(topic,url,body)
     res.status(200).send("OK");
 };
 async function quickstart(
     topicName = 'infra-qa', // Name for the new topic to create
-    url
+    url,
+    body,
 ) {
     // Instantiates a client
     const  projectId = 'sura-infra'; // Your Google Cloud Platform project ID
@@ -31,11 +34,11 @@ async function quickstart(
     let topic=null;
     if(exist){
         topic = await pubsub.topic(topicName)
-        await topic.publish(Buffer(JSON.stringify({url})));
+        await topic.publish(Buffer(JSON.stringify({url,body})));
     }else{
         let [topic] = await pubsub.createTopic(topicName);
         console.log(`Topic ${topic.name} created.`);
-        await topic.publish(Buffer(JSON.stringify({url})));
+        await topic.publish(Buffer(JSON.stringify({url,body})));
 
     }
 
